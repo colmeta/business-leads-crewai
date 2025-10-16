@@ -30,7 +30,156 @@ def run():
         
         # OUTREACH
         'target_firms': 20,  # Number of firms to contact in this batch
-        'outreach_batch_size': 5,  # Contact 5 firms per day (manageable follow-up)
+        'outreach_batch_size': 5,
+        'follow_up_cadence': 'aggressive'
+    }
+    
+    try:
+        LegalLeadGenerationEmpireCrew().crew().train(
+            n_iterations=int(sys.argv[1]), 
+            filename=sys.argv[2], 
+            inputs=inputs
+        )
+    except Exception as e:
+        raise Exception(f"An error occurred while training the crew: {e}")
+
+
+def replay():
+    """
+    Replay a specific task execution.
+    
+    Use this to debug or review how a particular task was executed.
+    """
+    try:
+        LegalLeadGenerationEmpireCrew().crew().replay(task_id=sys.argv[1])
+    except Exception as e:
+        raise Exception(f"An error occurred while replaying the crew: {e}")
+
+
+def test():
+    """
+    Test the crew with sample data.
+    
+    Use this to verify everything works before running with real data.
+    """
+    inputs = {
+        'target_city': 'Los Angeles',
+        'service_categories': 'Personal Injury Law',
+        'service_types': 'Car Accidents, Slip and Fall, Motorcycle Injuries',
+        'target_businesses': 'sample_data',
+        'pricing_model': 'pay_per_show',
+        'daily_leads': 'sample_data',
+        'provider_network': 'sample_data',
+        'research_depth': 'quick',
+        'daily_ad_budget': 20,
+        'lead_score_threshold': 7,
+        'outreach_batch_size': 3,
+        'follow_up_cadence': 'gentle'
+    }
+    
+    try:
+        LegalLeadGenerationEmpireCrew().crew().test(
+            n_iterations=int(sys.argv[1]), 
+            openai_model_name=sys.argv[2], 
+            inputs=inputs
+        )
+    except Exception as e:
+        raise Exception(f"An error occurred while testing the crew: {e}")
+
+
+def quick_start():
+    """
+    Quick start guide - Shows you the execution roadmap
+    """
+    print("\n" + "="*70)
+    print("🎯 LEGAL LEAD GENERATION EMPIRE - QUICK START GUIDE")
+    print("="*70 + "\n")
+    
+    print("📍 YOUR MISSION: Build a $10k/month lead generation business for PI lawyers")
+    print("\n" + "-"*70 + "\n")
+    
+    print("PHASE 1 - DAYS 1-30: Prove the Model Manually")
+    print("-" * 50)
+    print("Week 1: Research")
+    print("  → Run: python main.py phase1_research")
+    print("  → Output: List of 20-30 PI law firms in Los Angeles")
+    print("  → Action: Review the list, verify contact info\n")
+    
+    print("Week 1-2: Outreach")
+    print("  → Run: python main.py phase1_outreach")
+    print("  → Output: Personalized emails + follow-up sequences")
+    print("  → Action: Send emails manually, make follow-up calls")
+    print("  → Goal: Get 1-3 firms to say YES to 30-day free trial\n")
+    
+    print("Week 2-4: Deliver Results")
+    print("  → Run: python main.py phase1_leadgen")
+    print("  → Output: Qualified PI leads matched to your partner firm(s)")
+    print("  → Action: Run Google Ads, qualify leads manually, deliver to firm")
+    print("  → Goal: Deliver 2-3 qualified consultations, earn first $2-3k\n")
+    
+    print("\n" + "-"*70 + "\n")
+    
+    print("PHASE 2 - MONTHS 2-4: Automate & Scale to 10 Firms")
+    print("-" * 50)
+    print("  → Invest first earnings into automation")
+    print("  → Use CrewAI agents to handle qualification automatically")
+    print("  → Scale to 10-20 partner firms")
+    print("  → Revenue target: $20k-40k/month\n")
+    
+    print("\n" + "-"*70 + "\n")
+    
+    print("PHASE 3 - MONTHS 5+: Dominate & Expand")
+    print("-" * 50)
+    print("  → Dominate Los Angeles (50-100 firms)")
+    print("  → Clone to new cities (Miami, Houston, Chicago)")
+    print("  → Expand to new legal verticals (Family Law, Employment Law)")
+    print("  → Build your team, become the category king\n")
+    
+    print("\n" + "="*70)
+    print("🚀 READY TO START? Run: python main.py phase1_research")
+    print("="*70 + "\n")
+
+
+if __name__ == "__main__":
+    """
+    Command dispatcher - Routes to the right function based on user input
+    """
+    
+    if len(sys.argv) < 2:
+        print("\n⚠️  No command specified. Showing quick start guide...\n")
+        quick_start()
+        sys.exit(0)
+    
+    command = sys.argv[1].lower()
+    
+    # Command routing
+    commands = {
+        "run": run,
+        "phase1_research": run_phase_1_research,
+        "phase1_outreach": run_phase_1_outreach,
+        "phase1_leadgen": run_phase_1_lead_gen,
+        "train": train,
+        "replay": replay,
+        "test": test,
+        "quickstart": quick_start,
+        "help": quick_start,
+    }
+    
+    if command in commands:
+        commands[command]()
+    else:
+        print(f"\n❌ Unknown command: {command}\n")
+        print("Available commands:")
+        print("  - quickstart         Show the execution roadmap")
+        print("  - phase1_research    Find target law firms (Week 1)")
+        print("  - phase1_outreach    Contact law firms (Week 1-2)")
+        print("  - phase1_leadgen     Generate & match leads (Week 2-4)")
+        print("  - run                Full daily operations")
+        print("  - train              Train agents with real data")
+        print("  - test               Test with sample data")
+        print("  - replay             Replay a specific task")
+        print("\n💡 Tip: Start with 'python main.py quickstart'\n")
+        sys.exit(1)  # Contact 5 firms per day (manageable follow-up)
         'follow_up_cadence': 'aggressive',  # 'gentle' or 'aggressive'
         
         # OPERATIONS
