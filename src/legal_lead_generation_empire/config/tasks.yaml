@@ -1,95 +1,273 @@
 ---
-research_local_service_market:
-  description: |-
-    Research the local service market in a specified city to identify:
-    1. High-demand service categories (dental, HVAC, plumbing, legal, etc.)
-    2. Service businesses with poor online presence or negative reviews indicating communication issues
-    3. Market gaps where demand exceeds quality supply
-    4. Pricing information for lead generation services in the market
+# TASK 1: Research Target Market (Phase 1 - Days 1-7)
+research_pi_law_firm_market:
+  description: >
+    Research the Personal Injury law firm market in {target_city} to identify 
+    20-30 firms that are ideal candidates for lead generation services.
+    
+    Research criteria:
+    1. Firm size: 2-20 attorneys (big enough to pay, small enough to care)
+    2. Practice focus: 70%+ Personal Injury (car accidents, slip-and-fall, workplace injuries)
+    3. Advertising activity: Active Google Ads campaigns (shows they spend on leads)
+    4. Website quality: Check for intake forms, case results page, attorney bios
+    5. Review patterns: Look for complaints about "hard to reach" or "didn't call back"
+    6. Geographic coverage: Focus on firms serving {target_city} metro area
+    
+    For each firm, gather:
+    - Firm name and managing partner name
+    - Website URL and phone number
+    - Email addresses (use Hunter.io pattern: firstname@firmname.com)
+    - Estimated monthly ad spend (use SEMrush or similar if available)
+    - Key pain points based on reviews
+    - Estimated case volume based on attorney count
+    
+    Prioritize firms that show signs of growth ambition but have lead quality issues.
+    
+    Input variables: {target_city}, {research_depth}
+  expected_output: >
+    A ranked list of 20-30 Personal Injury law firms with complete profiles:
+    
+    For each firm include:
+    - Firm name, website, phone, key contact email
+    - Practice focus breakdown (% PI cases)
+    - Estimated monthly ad spend and lead sources
+    - Key pain points and opportunity areas
+    - Quality score (1-10) for partnership fit
+    - Personalized outreach angle (what problem can we solve for them?)
+    
+    Plus market summary:
+    - Average cost-per-lead in this market
+    - Competitive landscape (who else is selling leads?)
+    - Recommended pricing model for our service ($1,000-$3,000 per qualified appointment)
+    
+    Prioritized target list (top 10 firms to contact first).
+  agent: pi_law_firm_intelligence_agent
 
-    Use legitimate search methods and publicly available information from Google My Business, Yelp, and official business directories. Focus on businesses that show clear signs they need more customers based on review patterns, website quality, and online presence gaps.
+# TASK 2: Source Qualified PI Leads (Phase 1 - Days 1-30, then ongoing)
+source_qualified_pi_leads:
+  description: >
+    Find potential Personal Injury clients who are actively seeking legal help 
+    through legitimate public channels. This is the core value creation activity.
+    
+    Lead sources (all must be public, opt-in data):
+    1. Google Ads campaigns targeting PI keywords in {target_city}:
+       - "car accident lawyer [city]"
+       - "slip and fall attorney [city]"
+       - "motorcycle injury lawyer [city]"
+       - "injured at work what to do [city]"
+    
+    2. Landing page with qualification form asking:
+       - When did your injury occur? (must be within 2 years)
+       - Describe what happened (50-200 words)
+       - Were you injured due to someone else's negligence? (yes/no)
+       - Have you seen a doctor? (yes/no - must be yes)
+       - Do you currently have a lawyer? (must be no)
+       - Contact info: name, phone, email
+    
+    3. Lead scoring system (1-10):
+       - 9-10: Severe injury, clear liability, recent (30 days), saw doctor
+       - 7-8: Moderate injury, probable liability, recent (90 days), saw doctor
+       - 5-6: Minor injury or unclear liability or older incident
+       - 1-4: No injury, no doctor visit, already has lawyer, or outside statute
+    
+    Only process leads scoring 7+ for attorney handoff.
+    
+    For each qualified lead, personally call within 15 minutes to verify:
+    - Confirm injury details and medical treatment
+    - Assess demeanor and communication ability (will they show up?)
+    - Set expectations about attorney consultation process
+    - Get permission to share info with attorney
+    
+    Input variables: {target_city}, {daily_ad_budget}, {lead_score_threshold}
+  expected_output: >
+    Daily batch of 3-10 qualified Personal Injury leads including:
+    
+    For each lead:
+    - Full name and verified contact info (phone + email)
+    - Injury date and description
+    - Medical treatment received (doctor/hospital name)
+    - Liability assessment (who was at fault and why)
+    - Lead quality score (7-10)
+    - Call notes from verification conversation
+    - Best time to reach them for attorney call
+    - Urgency level (immediate / this week / flexible)
+    
+    Daily metrics:
+    - Total form submissions
+    - Qualified leads (score 7+)
+    - Cost per qualified lead
+    - Qualification rate (% of submissions that pass)
+    
+    Flag any exceptional cases (catastrophic injuries, clear high-value cases) for priority handling.
+  agent: pi_lead_qualification_specialist
 
-    Input variables: {target_city}, {service_categories}
-  expected_output: |-
-    A comprehensive market research report including:
-    - List of 20-30 potential service provider clients with contact information
-    - Analysis of market demand for each service category
-    - Competitive landscape assessment
-    - Recommended pricing strategy for lead generation services
-    - Priority list of businesses most likely to need lead generation help
-  agent: local_business_intelligence_agent
-source_legitimate_lead_opportunities:
-  description: |-
-    Find potential customers who are actively seeking services through legitimate, public channels:
-
-    1. Monitor legitimate classified sites (Craigslist, OfferUp, local classifieds) for "Services Wanted" postings
-    2. Check public business review sites where people ask for recommendations
-    3. Search local business directory inquiry sections
-    4. Identify public posts on legitimate community boards
-    5. Find people who have publicly listed service requests with contact information
-
-    IMPORTANT: Only use sources where people have explicitly made their contact information public and opted into being contacted. Avoid any platform scraping that violates terms of service.
-
-    Input variables: {target_city}, {service_types}
-  expected_output: |-
-    A daily report of 10-20 legitimate lead opportunities including:
-    - Contact information (only publicly available)
-    - Service needed
-    - Urgency level
-    - Location details
-    - Source platform
-    - Quality score (1-10)
-    - Compliance verification (confirming contact info was made public voluntarily)
-  agent: lead_qualification_specialist
-build_service_provider_network:
-  description: |-
-    Systematically build relationships with local service providers using ethical outreach:
-
-    1. Create personalized outreach messages that demonstrate clear value proposition
-    2. Develop trust-building content that shows understanding of their business challenges
-    3. Craft follow-up sequences that maintain relationships without being pushy
-    4. Prepare case studies and testimonials (as available)
-    5. Design onboarding process for new service providers
-
-    Focus on businesses identified in market research as most likely to benefit from lead generation services. Use professional, consultative approach rather than aggressive sales tactics.
-
-    Input variables: {target_businesses}, {service_categories}, {pricing_model}
-  expected_output: |-
-    Complete service provider recruitment package including:
-    - Personalized outreach email templates for each business type
-    - Value proposition presentations tailored to each service category
-    - Onboarding workflow for new providers
-    - Pricing packages and contracts
-    - Follow-up sequences
-    - Success metrics and ROI calculations for each provider type
-  agent: service_provider_outreach_coordinator
+# TASK 3: Build Law Firm Partnership Network (Phase 1 - Days 1-30)
+build_pi_law_firm_network:
+  description: >
+    Execute systematic outreach to the prioritized list of Personal Injury law firms 
+    using the "30-Day Risk-Free Proof" offer. The goal is to sign 1-3 firms in the 
+    first 30 days, then scale to 10-20 firms by month 4.
+    
+    Outreach sequence:
+    
+    Email 1 (Day 1 - The Hook):
+    Subject: "Free PI clients for [Firm Name] - 30 day trial"
+    Body: 
+    - Quick intro: "I help PI firms get more high-quality consultations"
+    - The offer: "I'll find, vet, and schedule consultations for you FREE for 30 days"
+    - The catch: "You only pay $1,000 per client who shows up. If I deliver nothing, you pay nothing."
+    - One question: "Would you like 2-3 qualified PI consultations this month?"
+    
+    Follow-up (Day 3 if no response):
+    - Bump the thread with a one-liner
+    - Include a sample lead profile (anonymized) to show quality
+    
+    Phone call (Day 5 if still no response):
+    - Call the firm directly, ask for managing partner or intake director
+    - Same pitch, even shorter: "I deliver pre-vetted PI clients to your calendar. 
+      Free for 30 days, then $1k per show. Want to try it?"
+    
+    For firms that say YES:
+    - Send simple one-page agreement (not a legal contract, just terms of service)
+    - Get access to their calendar (Calendly link or manual coordination)
+    - Confirm their practice areas and geographic coverage
+    - Set expectations: 2-3 qualified leads in first 30 days
+    
+    For firms that say NO:
+    - Ask why (price? trust? already have enough clients?)
+    - Offer to follow up in 60 days
+    - Add to nurture list for future outreach
+    
+    Create case studies from successful placements to use in future outreach.
+    
+    Input variables: {target_firms}, {outreach_batch_size}, {follow_up_cadence}
+  expected_output: >
+    Complete outreach execution package:
+    
+    1. Personalized email templates for each firm (using their name, recent case results, etc.)
+    2. Follow-up sequence schedule (Day 1, 3, 5, 7)
+    3. Phone script with objection handling
+    4. Simple service agreement template
+    5. Onboarding checklist for new partner firms
+    
+    Weekly progress report:
+    - Firms contacted (emails sent, calls made)
+    - Response rate
+    - Firms agreeing to 30-day trial
+    - Firms declined (with reasons)
+    - Active partnerships and their status
+    
+    Success metrics:
+    - Target: 1-3 firms signed in first 30 days
+    - Target: 5-10 firms by day 60
+    - Target: 10-20 firms by day 120
+    
+    Repository of testimonials and case studies as they accumulate.
+  agent: pi_law_firm_outreach_coordinator
   context:
-  - research_local_service_market
-daily_lead_matching_operation:
-  description: |-
-    Execute the daily lead generation business operation by:
+    - research_pi_law_firm_market
 
-    1. Processing new qualified leads from legitimate sources
-    2. Matching leads to appropriate service providers based on location, specialty, and capacity
-    3. Facilitating introductions between customers and providers
-    4. Tracking conversion rates and success metrics
-    5. Following up with both parties to ensure satisfaction
-    6. Managing payment processing and invoicing
-
-    This is the core operational task that generates revenue by successfully connecting qualified leads with service providers.
-
-    Input variables: {daily_leads}, {provider_network}, {pricing_model}
-  expected_output: |-
-    Daily operational report including:
-    - Number of leads processed and matched
-    - Introduction messages sent to customers and providers
-    - Revenue generated from successful matches
-    - Conversion rates by service category
-    - Provider satisfaction scores
-    - Customer feedback and follow-up actions needed
-    - Financial summary and profit calculations
-  agent: service_provider_outreach_coordinator
+# TASK 4: Execute Daily Lead Matching (Phase 1 ongoing - This is the $$ maker)
+execute_daily_lead_matching:
+  description: >
+    This is the core revenue-generating operation. Match qualified leads with 
+    law firms, facilitate introductions, track outcomes, and manage payments.
+    
+    Daily workflow:
+    
+    MORNING (9 AM):
+    1. Review new qualified leads from overnight/early morning form submissions
+    2. Prioritize by score and urgency
+    3. Match each lead to appropriate firm based on:
+       - Case type (car accident → firm specializing in auto cases)
+       - Location (lead must be in firm's service area)
+       - Firm capacity (don't overload one firm, spread the wealth)
+       - Firm conversion rate (send best leads to best converters)
+    
+    LEAD HANDOFF (within 1 hour of qualification):
+    1. Email firm's intake coordinator with lead details:
+       - Client name and contact info
+       - Injury description and date
+       - Medical treatment summary
+       - Why this is a good case (your assessment)
+       - Best time to reach client
+    
+    2. Text the attorney/intake person: "New PI lead sent to your email - [Client Name] - 
+       [Brief injury] - Call within 2 hours for best conversion"
+    
+    3. Text the client: "Great news! [Firm Name] will call you today at [time]. 
+       Attorney [Name] specializes in cases like yours. Please answer when they call - 
+       it's a [Firm Phone Number]"
+    
+    AFTERNOON (3 PM):
+    - Follow up with firms that haven't contacted the client yet (gentle nudge)
+    - Follow up with clients who missed the attorney's call (reschedule)
+    
+    END OF DAY (6 PM):
+    - Log all outcomes in spreadsheet:
+      * Lead delivered to which firm
+      * Did attorney make contact? (yes/no)
+      * Did client schedule consultation? (yes/no)
+      * Consultation date/time
+    
+    WEEKLY (Fridays):
+    - Review consultation show-up rates for the week
+    - Invoice firms for clients who showed up ($1,000 per show)
+    - Collect feedback from firms (lead quality, client communication)
+    - Collect feedback from clients (attorney responsiveness, professionalism)
+    - Optimize matching algorithm based on conversion data
+    
+    MONTHLY:
+    - Calculate revenue and profit
+    - Identify top-performing firms (high conversion, fast follow-up)
+    - Identify bottom performers (no-shows, poor follow-up)
+    - Adjust firm allocation (send more leads to winners, fewer to laggards)
+    
+    Input variables: {daily_qualified_leads}, {partner_firms}, {pricing_model}
+  expected_output: >
+    Daily operations report:
+    
+    Leads processed today:
+    - Number of qualified leads ready for handoff
+    - Firms they were matched to
+    - Introduction messages sent (timestamps)
+    - Attorney response times
+    - Client response rates
+    
+    Consultation bookings:
+    - Number of consultations scheduled today
+    - Consultation dates/times
+    - Firms involved
+    
+    Revenue tracking:
+    - Consultations completed this week (show-ups)
+    - Revenue generated (# shows × $1,000)
+    - Outstanding invoices
+    - Payment received
+    
+    Performance metrics:
+    - Lead-to-contact rate (% of leads attorneys actually called)
+    - Contact-to-consultation rate (% of calls that became appointments)
+    - Consultation-to-show rate (% of appointments where client showed up)
+    - Average time from lead delivery to attorney contact
+    
+    Firm performance rankings:
+    - Best performers (high conversion, fast response)
+    - Underperformers (need coaching or removal)
+    
+    Client satisfaction scores (from follow-up surveys)
+    
+    Weekly financial summary:
+    - Total leads delivered: X
+    - Total consultations scheduled: Y
+    - Total clients who showed up: Z
+    - Revenue: Z × $1,000
+    - Ad spend: $XXX
+    - Profit: Revenue - Ad Spend = $XXXX
+    
+    Recommended optimizations based on data.
+  agent: pi_client_matching_coordinator
   context:
-  - research_local_service_market
-  - source_legitimate_lead_opportunities
-  - build_service_provider_network
+    - research_pi_law_firm_market
+    - source_qualified_pi_leads
+    - build_pi_law_firm_network
