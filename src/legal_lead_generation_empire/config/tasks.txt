@@ -1,0 +1,95 @@
+---
+research_local_service_market:
+  description: |-
+    Research the local service market in a specified city to identify:
+    1. High-demand service categories (dental, HVAC, plumbing, legal, etc.)
+    2. Service businesses with poor online presence or negative reviews indicating communication issues
+    3. Market gaps where demand exceeds quality supply
+    4. Pricing information for lead generation services in the market
+
+    Use legitimate search methods and publicly available information from Google My Business, Yelp, and official business directories. Focus on businesses that show clear signs they need more customers based on review patterns, website quality, and online presence gaps.
+
+    Input variables: {target_city}, {service_categories}
+  expected_output: |-
+    A comprehensive market research report including:
+    - List of 20-30 potential service provider clients with contact information
+    - Analysis of market demand for each service category
+    - Competitive landscape assessment
+    - Recommended pricing strategy for lead generation services
+    - Priority list of businesses most likely to need lead generation help
+  agent: local_business_intelligence_agent
+source_legitimate_lead_opportunities:
+  description: |-
+    Find potential customers who are actively seeking services through legitimate, public channels:
+
+    1. Monitor legitimate classified sites (Craigslist, OfferUp, local classifieds) for "Services Wanted" postings
+    2. Check public business review sites where people ask for recommendations
+    3. Search local business directory inquiry sections
+    4. Identify public posts on legitimate community boards
+    5. Find people who have publicly listed service requests with contact information
+
+    IMPORTANT: Only use sources where people have explicitly made their contact information public and opted into being contacted. Avoid any platform scraping that violates terms of service.
+
+    Input variables: {target_city}, {service_types}
+  expected_output: |-
+    A daily report of 10-20 legitimate lead opportunities including:
+    - Contact information (only publicly available)
+    - Service needed
+    - Urgency level
+    - Location details
+    - Source platform
+    - Quality score (1-10)
+    - Compliance verification (confirming contact info was made public voluntarily)
+  agent: lead_qualification_specialist
+build_service_provider_network:
+  description: |-
+    Systematically build relationships with local service providers using ethical outreach:
+
+    1. Create personalized outreach messages that demonstrate clear value proposition
+    2. Develop trust-building content that shows understanding of their business challenges
+    3. Craft follow-up sequences that maintain relationships without being pushy
+    4. Prepare case studies and testimonials (as available)
+    5. Design onboarding process for new service providers
+
+    Focus on businesses identified in market research as most likely to benefit from lead generation services. Use professional, consultative approach rather than aggressive sales tactics.
+
+    Input variables: {target_businesses}, {service_categories}, {pricing_model}
+  expected_output: |-
+    Complete service provider recruitment package including:
+    - Personalized outreach email templates for each business type
+    - Value proposition presentations tailored to each service category
+    - Onboarding workflow for new providers
+    - Pricing packages and contracts
+    - Follow-up sequences
+    - Success metrics and ROI calculations for each provider type
+  agent: service_provider_outreach_coordinator
+  context:
+  - research_local_service_market
+daily_lead_matching_operation:
+  description: |-
+    Execute the daily lead generation business operation by:
+
+    1. Processing new qualified leads from legitimate sources
+    2. Matching leads to appropriate service providers based on location, specialty, and capacity
+    3. Facilitating introductions between customers and providers
+    4. Tracking conversion rates and success metrics
+    5. Following up with both parties to ensure satisfaction
+    6. Managing payment processing and invoicing
+
+    This is the core operational task that generates revenue by successfully connecting qualified leads with service providers.
+
+    Input variables: {daily_leads}, {provider_network}, {pricing_model}
+  expected_output: |-
+    Daily operational report including:
+    - Number of leads processed and matched
+    - Introduction messages sent to customers and providers
+    - Revenue generated from successful matches
+    - Conversion rates by service category
+    - Provider satisfaction scores
+    - Customer feedback and follow-up actions needed
+    - Financial summary and profit calculations
+  agent: service_provider_outreach_coordinator
+  context:
+  - research_local_service_market
+  - source_legitimate_lead_opportunities
+  - build_service_provider_network

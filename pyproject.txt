@@ -1,0 +1,23 @@
+[project]
+name = "legal_lead_generation_empire"
+version = "0.1.0"
+description = "legal_lead_generation_empire using crewAI"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "crewai[tools]>=0.203.0,<1.0.0"
+]
+
+[project.scripts]
+legal_lead_generation_empire = "legal_lead_generation_empire.main:run"
+run_crew = "legal_lead_generation_empire.main:run"
+train = "legal_lead_generation_empire.main:train"
+replay = "legal_lead_generation_empire.main:replay"
+test = "legal_lead_generation_empire.main:test"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "crew"
