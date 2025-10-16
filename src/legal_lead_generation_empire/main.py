@@ -1,335 +1,215 @@
-#!/usr/bin/env python
-"""
-Legal Lead Generation Empire - Main Execution File
+import os
+import json
 
-This is your command center for running the PI lawyer lead generation business.
-Based on the 3-phase blueprint: Manual → Automated → Scale
-"""
-import sys
-from legal_lead_generation_empire.crew import LegalLeadGenerationEmpireCrew
+from crewai import LLM
+from crewai import Agent, Crew, Process, Task
+from crewai.project import CrewBase, agent, crew, task
+from crewai_tools import (
+    SerpApiGoogleSearchTool,
+    ScrapeWebsiteTool
+)
 
-def run():
+
+@CrewBase
+class LegalLeadGenerationEmpireCrew:
     """
-    Run the full crew - This executes your entire lead generation operation.
+    Legal Lead Generation Empire Crew
     
-    Use this for daily operations once you have partner firms and active ad campaigns.
+    This crew executes the 3-phase blueprint for building a PI lawyer
+    lead generation business from $0 to $10k+/month.
     """
-    print("\n" + "="*60)
-    print("🚀 LEGAL LEAD GENERATION EMPIRE - FULL RUN")
-    print("="*60 + "\n")
+
+    # ==================== AGENTS ====================
     
-    # These inputs control your entire operation
-    inputs = {
-        # TARGET MARKET
-        'target_city': 'Los Angeles',  # Start here, then expand to Miami, Houston, etc.
-        'research_depth': 'deep',  # 'quick' for 10 firms, 'deep' for 30 firms
+    @agent
+    def pi_law_firm_intelligence_agent(self) -> Agent:
+        """
+        Phase 1 Agent: Research and identify target PI law firms
         
-        # LEAD GENERATION
-        'daily_ad_budget': 50,  # Start with $50/day, scale to $200+ as you prove ROI
-        'lead_score_threshold': 7,  # Only pass leads scoring 7+ to attorneys
-        
-        # OUTREACH
-        'target_firms': 20,  # Number of firms to contact in this batch
-        'outreach_batch_size': 5,
-        'follow_up_cadence': 'aggressive'
-    }
-    
-    try:
-        LegalLeadGenerationEmpireCrew().crew().train(
-            n_iterations=int(sys.argv[1]), 
-            filename=sys.argv[2], 
-            inputs=inputs
+        This agent finds firms that are spending money on advertising
+        but need better quality leads. It's your market intelligence system.
+        """
+        return Agent(
+            config=self.agents_config["pi_law_firm_intelligence_agent"],
+            tools=[
+                SerpApiGoogleSearchTool(),  # For finding firms and their online presence
+                ScrapeWebsiteTool()          # For analyzing firm websites
+            ],
+            reasoning=False,
+            max_reasoning_attempts=None,
+            inject_date=True,
+            allow_delegation=False,
+            max_iter=25,
+            max_rpm=None,
+            max_execution_time=None,
+            llm=LLM(
+                model="gpt-4o-mini",
+                temperature=0.7,
+            ),
         )
-    except Exception as e:
-        raise Exception(f"An error occurred while training the crew: {e}")
-
-
-def replay():
-    """
-    Replay a specific task execution.
     
-    Use this to debug or review how a particular task was executed.
-    """
-    try:
-        LegalLeadGenerationEmpireCrew().crew().replay(task_id=sys.argv[1])
-    except Exception as e:
-        raise Exception(f"An error occurred while replaying the crew: {e}")
-
-
-def test():
-    """
-    Test the crew with sample data.
-    
-    Use this to verify everything works before running with real data.
-    """
-    inputs = {
-        'target_city': 'Los Angeles',
-        'service_categories': 'Personal Injury Law',
-        'service_types': 'Car Accidents, Slip and Fall, Motorcycle Injuries',
-        'target_businesses': 'sample_data',
-        'pricing_model': 'pay_per_show',
-        'daily_leads': 'sample_data',
-        'provider_network': 'sample_data',
-        'research_depth': 'quick',
-        'daily_ad_budget': 20,
-        'lead_score_threshold': 7,
-        'outreach_batch_size': 3,
-        'follow_up_cadence': 'gentle'
-    }
-    
-    try:
-        LegalLeadGenerationEmpireCrew().crew().test(
-            n_iterations=int(sys.argv[1]), 
-            openai_model_name=sys.argv[2], 
-            inputs=inputs
-        )
-    except Exception as e:
-        raise Exception(f"An error occurred while testing the crew: {e}")
-
-
-def quick_start():
-    """
-    Quick start guide - Shows you the execution roadmap
-    """
-    print("\n" + "="*70)
-    print("🎯 LEGAL LEAD GENERATION EMPIRE - QUICK START GUIDE")
-    print("="*70 + "\n")
-    
-    print("📍 YOUR MISSION: Build a $10k/month lead generation business for PI lawyers")
-    print("\n" + "-"*70 + "\n")
-    
-    print("PHASE 1 - DAYS 1-30: Prove the Model Manually")
-    print("-" * 50)
-    print("Week 1: Research")
-    print("  → Run: python main.py phase1_research")
-    print("  → Output: List of 20-30 PI law firms in Los Angeles")
-    print("  → Action: Review the list, verify contact info\n")
-    
-    print("Week 1-2: Outreach")
-    print("  → Run: python main.py phase1_outreach")
-    print("  → Output: Personalized emails + follow-up sequences")
-    print("  → Action: Send emails manually, make follow-up calls")
-    print("  → Goal: Get 1-3 firms to say YES to 30-day free trial\n")
-    
-    print("Week 2-4: Deliver Results")
-    print("  → Run: python main.py phase1_leadgen")
-    print("  → Output: Qualified PI leads matched to your partner firm(s)")
-    print("  → Action: Run Google Ads, qualify leads manually, deliver to firm")
-    print("  → Goal: Deliver 2-3 qualified consultations, earn first $2-3k\n")
-    
-    print("\n" + "-"*70 + "\n")
-    
-    print("PHASE 2 - MONTHS 2-4: Automate & Scale to 10 Firms")
-    print("-" * 50)
-    print("  → Invest first earnings into automation")
-    print("  → Use CrewAI agents to handle qualification automatically")
-    print("  → Scale to 10-20 partner firms")
-    print("  → Revenue target: $20k-40k/month\n")
-    
-    print("\n" + "-"*70 + "\n")
-    
-    print("PHASE 3 - MONTHS 5+: Dominate & Expand")
-    print("-" * 50)
-    print("  → Dominate Los Angeles (50-100 firms)")
-    print("  → Clone to new cities (Miami, Houston, Chicago)")
-    print("  → Expand to new legal verticals (Family Law, Employment Law)")
-    print("  → Build your team, become the category king\n")
-    
-    print("\n" + "="*70)
-    print("🚀 READY TO START? Run: python main.py phase1_research")
-    print("="*70 + "\n")
-
-
-if __name__ == "__main__":
-    """
-    Command dispatcher - Routes to the right function based on user input
-    """
-    
-    if len(sys.argv) < 2:
-        print("\n⚠️  No command specified. Showing quick start guide...\n")
-        quick_start()
-        sys.exit(0)
-    
-    command = sys.argv[1].lower()
-    
-    # Command routing
-    commands = {
-        "run": run,
-        "phase1_research": run_phase_1_research,
-        "phase1_outreach": run_phase_1_outreach,
-        "phase1_leadgen": run_phase_1_lead_gen,
-        "train": train,
-        "replay": replay,
-        "test": test,
-        "quickstart": quick_start,
-        "help": quick_start,
-    }
-    
-    if command in commands:
-        commands[command]()
-    else:
-        print(f"\n❌ Unknown command: {command}\n")
-        print("Available commands:")
-        print("  - quickstart         Show the execution roadmap")
-        print("  - phase1_research    Find target law firms (Week 1)")
-        print("  - phase1_outreach    Contact law firms (Week 1-2)")
-        print("  - phase1_leadgen     Generate & match leads (Week 2-4)")
-        print("  - run                Full daily operations")
-        print("  - train              Train agents with real data")
-        print("  - test               Test with sample data")
-        print("  - replay             Replay a specific task")
-        print("\n💡 Tip: Start with 'python main.py quickstart'\n")
-        sys.exit(1)  # Contact 5 firms per day (manageable follow-up)
-        'follow_up_cadence': 'aggressive',  # 'gentle' or 'aggressive'
+    @agent
+    def pi_lead_qualification_specialist(self) -> Agent:
+        """
+        Core Value Agent: Finds and qualifies PI leads
         
-        # OPERATIONS
-        'daily_qualified_leads': 'from_source_task',  # Pulls from lead qualification task
-        'partner_firms': 'from_network_task',  # Pulls from network building task
-        'pricing_model': 'pay_per_show',  # $1,000 per consultation show-up
-    }
+        This is your money-maker. It filters out bad leads and only
+        passes high-quality, pre-vetted clients to law firms.
+        """
+        return Agent(
+            config=self.agents_config["pi_lead_qualification_specialist"],
+            tools=[
+                ScrapeWebsiteTool(),         # For researching case details
+                SerpApiGoogleSearchTool()    # For verifying information
+            ],
+            reasoning=True,  # Enable reasoning for complex qualification decisions
+            max_reasoning_attempts=3,
+            inject_date=True,
+            allow_delegation=False,
+            max_iter=25,
+            max_rpm=None,
+            max_execution_time=None,
+            llm=LLM(
+                model="gpt-4o-mini",
+                temperature=0.5,  # Lower temp for consistent qualification
+            ),
+        )
     
-    print(f"📍 Target Market: {inputs['target_city']}")
-    print(f"💰 Daily Ad Budget: ${inputs['daily_ad_budget']}")
-    print(f"🎯 Lead Threshold: {inputs['lead_score_threshold']}/10")
-    print(f"📧 Outreach Target: {inputs['target_firms']} firms")
-    print(f"💵 Pricing: {inputs['pricing_model']} ($1,000/show)")
-    print("\n" + "-"*60 + "\n")
+    @agent
+    def pi_law_firm_outreach_coordinator(self) -> Agent:
+        """
+        Relationship Builder: Signs up law firms as partners
+        
+        This agent crafts personalized outreach that converts firms
+        into paying clients using the risk-free trial offer.
+        """
+        return Agent(
+            config=self.agents_config["pi_law_firm_outreach_coordinator"],
+            tools=[],  # No tools needed - pure strategy and communication
+            reasoning=True,
+            max_reasoning_attempts=2,
+            inject_date=True,
+            allow_delegation=False,
+            max_iter=20,
+            max_rpm=None,
+            max_execution_time=None,
+            llm=LLM(
+                model="gpt-4o-mini",
+                temperature=0.8,  # Higher temp for creative, personalized outreach
+            ),
+        )
     
-    # Kickoff the crew
-    result = LegalLeadGenerationEmpireCrew().crew().kickoff(inputs=inputs)
-    
-    print("\n" + "="*60)
-    print("✅ CREW EXECUTION COMPLETE")
-    print("="*60 + "\n")
-    
-    return result
+    @agent
+    def pi_client_matching_coordinator(self) -> Agent:
+        """
+        Operations Manager: Matches leads to firms and tracks $$
+        
+        This agent runs your daily operations, tracking every lead,
+        every consultation, and every dollar earned.
+        """
+        return Agent(
+            config=self.agents_config["pi_client_matching_coordinator"],
+            tools=[],  # Operates on data from other agents
+            reasoning=True,
+            max_reasoning_attempts=2,
+            inject_date=True,
+            allow_delegation=False,
+            max_iter=30,  # More iterations for complex matching logic
+            max_rpm=None,
+            max_execution_time=None,
+            llm=LLM(
+                model="gpt-4o-mini",
+                temperature=0.3,  # Very low temp for consistent operations
+            ),
+        )
 
+    # ==================== TASKS ====================
+    
+    @task
+    def research_pi_law_firm_market(self) -> Task:
+        """
+        TASK 1: Market Research
+        Phase 1, Week 1
+        
+        Output: List of 20-30 target PI law firms with full profiles
+        """
+        return Task(
+            config=self.tasks_config["research_pi_law_firm_market"],
+            markdown=True,  # Enable markdown for nicely formatted output
+        )
+    
+    @task
+    def source_qualified_pi_leads(self) -> Task:
+        """
+        TASK 2: Lead Generation & Qualification
+        Phase 1, Week 2-4 (ongoing)
+        
+        Output: Daily batch of 3-10 qualified PI leads
+        """
+        return Task(
+            config=self.tasks_config["source_qualified_pi_leads"],
+            markdown=True,
+        )
+    
+    @task
+    def build_pi_law_firm_network(self) -> Task:
+        """
+        TASK 3: Partnership Outreach
+        Phase 1, Week 1-4
+        
+        Output: Outreach templates, follow-up sequences, signed partners
+        """
+        return Task(
+            config=self.tasks_config["build_pi_law_firm_network"],
+            markdown=True,
+        )
+    
+    @task
+    def execute_daily_lead_matching(self) -> Task:
+        """
+        TASK 4: Daily Operations (The Money Maker)
+        Phase 1-3, Ongoing
+        
+        Output: Daily report of leads matched, consultations booked, revenue earned
+        """
+        return Task(
+            config=self.tasks_config["execute_daily_lead_matching"],
+            markdown=True,
+        )
 
-def run_phase_1_research():
-    """
-    Phase 1: Market Research Only
+    # ==================== CREW ASSEMBLY ====================
     
-    Use this for your first run to identify target law firms in your city.
-    This will give you the 20-30 firms to contact with your risk-free offer.
-    """
-    print("\n" + "="*60)
-    print("🔍 PHASE 1: MARKET RESEARCH - Finding Target Law Firms")
-    print("="*60 + "\n")
-    
-    inputs = {
-        'target_city': 'Los Angeles',
-        'research_depth': 'deep',
-        'service_categories': 'Personal Injury Law',
-        'service_types': 'Car Accidents, Slip and Fall, Motorcycle Injuries',
-        'target_businesses': 'to_be_determined',
-        'pricing_model': 'pay_per_show',
-        'daily_leads': 'not_started_yet',
-        'provider_network': 'not_started_yet',
-        'daily_ad_budget': 0,
-        'lead_score_threshold': 7,
-        'outreach_batch_size': 5,
-        'follow_up_cadence': 'aggressive'
-    }
-    
-    # Only run the first task (research)
-    crew = LegalLeadGenerationEmpireCrew().crew()
-    # Note: You'll need to modify crew.py to support running individual tasks
-    # For now, this will run all tasks, but you can comment out tasks 2-4 in crew.py
-    
-    result = crew.kickoff(inputs=inputs)
-    
-    print("\n📊 Research Complete! Check your output for the target firm list.")
-    print("Next step: Run 'run_phase_1_outreach' to contact these firms.\n")
-    
-    return result
+    @crew
+    def crew(self) -> Crew:
+        """
+        Assembles the Legal Lead Generation Empire crew
+        
+        Process: Sequential (each task depends on the previous one)
+        - First: Research target firms
+        - Second: Generate qualified leads
+        - Third: Build partner network
+        - Fourth: Execute daily matching operations
+        """
+        return Crew(
+            agents=self.agents,  # All 4 agents defined above
+            tasks=self.tasks,    # All 4 tasks defined above
+            process=Process.sequential,  # Run tasks in order
+            verbose=True,  # Show detailed execution logs
+            memory=True,   # Enable memory so agents learn over time
+            planning=True,  # Enable planning for complex multi-step tasks
+        )
 
-
-def run_phase_1_outreach():
-    """
-    Phase 1: Outreach Campaign
+    # ==================== UTILITY METHODS ====================
     
-    Use this after research to contact your target firms with the risk-free offer.
-    """
-    print("\n" + "="*60)
-    print("📧 PHASE 1: OUTREACH - Contacting Law Firms")
-    print("="*60 + "\n")
-    
-    # You would load the research results here
-    inputs = {
-        'target_city': 'Los Angeles',
-        'target_firms': 20,
-        'outreach_batch_size': 5,
-        'follow_up_cadence': 'aggressive',
-        'pricing_model': 'pay_per_show',
-        'research_depth': 'completed',
-        'service_categories': 'Personal Injury Law',
-        'service_types': 'Car Accidents, Slip and Fall, Motorcycle Injuries',
-        'target_businesses': 'from_research_results',
-        'daily_leads': 'not_started_yet',
-        'provider_network': 'building',
-        'daily_ad_budget': 0,
-        'lead_score_threshold': 7
-    }
-    
-    result = LegalLeadGenerationEmpireCrew().crew().kickoff(inputs=inputs)
-    
-    print("\n✉️ Outreach Complete! Follow up with firms that responded.")
-    print("Next step: Once you have 1 firm, run 'run_phase_1_lead_gen' to start delivering.\n")
-    
-    return result
-
-
-def run_phase_1_lead_gen():
-    """
-    Phase 1: Manual Lead Generation & Matching
-    
-    Use this when you have your first partner firm. This runs the lead sourcing
-    and matching operations to prove the model works.
-    """
-    print("\n" + "="*60)
-    print("🎯 PHASE 1: LEAD GENERATION - Delivering for First Client")
-    print("="*60 + "\n")
-    
-    inputs = {
-        'target_city': 'Los Angeles',
-        'daily_ad_budget': 50,  # Start with $50/day
-        'lead_score_threshold': 7,
-        'daily_qualified_leads': 'from_ad_campaigns',
-        'partner_firms': '1_test_firm',  # Your first client
-        'pricing_model': 'pay_per_show',
-        'research_depth': 'completed',
-        'service_categories': 'Personal Injury Law',
-        'service_types': 'Car Accidents, Slip and Fall, Motorcycle Injuries',
-        'target_businesses': 'completed',
-        'provider_network': '1_active_firm',
-        'target_firms': 0,
-        'outreach_batch_size': 0,
-        'follow_up_cadence': 'none'
-    }
-    
-    result = LegalLeadGenerationEmpireCrew().crew().kickoff(inputs=inputs)
-    
-    print("\n🎉 Lead generation active! Monitor your daily matching operations.")
-    print("Goal: Deliver 2-3 qualified leads in 30 days to prove the model.\n")
-    
-    return result
-
-
-def train():
-    """
-    Train the crew to optimize performance.
-    
-    Use this after you have real data to improve the agents' decision-making.
-    """
-    inputs = {
-        'target_city': 'Los Angeles',
-        'service_categories': 'Personal Injury Law',
-        'service_types': 'Car Accidents, Slip and Fall, Motorcycle Injuries',
-        'target_businesses': 'sample_data',
-        'pricing_model': 'pay_per_show',
-        'daily_leads': 'sample_data',
-        'provider_network': 'sample_data',
-        'research_depth': 'deep',
-        'daily_ad_budget': 50,
-        'lead_score_threshold': 7,
-        'outreach_batch_size': 5,
+    def _load_response_format(self, name):
+        """
+        Load structured output formats for agents
+        (Currently unused, but available for future JSON schema validation)
+        """
+        with open(os.path.join(self.base_directory, "config", f"{name}.json")) as f:
+            json_schema = json.loads(f.read())
+        
+        # Note: SchemaConverter import needed if you use this
+        # from crewai import SchemaConverter
+        # return SchemaConverter.build(json_schema)
+        return json_schema
